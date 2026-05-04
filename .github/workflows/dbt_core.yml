@@ -1,1 +1,46 @@
+name: dbt Core CI
 
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  DBT_PROFILES_DIR: ${{ github.workspace }}
+
+jobs:
+  dbt-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Print dbt version
+        run: dbt --version
+
+      - name: Install dbt packages
+        run: dbt deps
+        env:
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.BIGQUERY_SERVICE_ACCOUNT_KEY }}
+
+      - name: dbt debug (verify connection)
+        run: dbt debug
+        env:
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.BIGQUERY_SERVICE_ACCOUNT_KEY }}
+
+      - name: dbt run (build the test model)
+        run: dbt run --select stg_applovin__daily_revenue
+        env:
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.BIGQUERY_SERVICE_ACCOUNT_KEY }}
