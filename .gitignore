@@ -1,1 +1,11 @@
-
+target/
+dbt_packages/
+logs/
+*.pyc
+__pycache__/
+.env
+.venv
+venv/
+.DS_Store
+profiles.yml.local
+keyfile.json
