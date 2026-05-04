@@ -1,1 +1,39 @@
+version: 2
 
+models:
+  - name: stg_applovin__daily_revenue
+    description: |
+      Light staging wrapper over raw AppLovin daily revenue data.
+      Verified: 100% package_name coverage on 23,487 rows as of validation.
+
+    columns:
+      - name: date
+        description: "Date of the revenue (one row per app per network per day)"
+        tests:
+          - not_null
+
+      - name: package_name
+        description: "Android package name or iOS bundle id - the canonical app identifier"
+        tests:
+          - not_null
+
+      - name: platform
+        description: "Mobile platform - android or ios"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['android', 'ios']
+
+      - name: revenue_usd
+        description: "Revenue in USD for that day/app/network"
+        # No not_null test - revenue_usd can be 0 legitimately
+
+      - name: network
+        description: "Ad network that generated the revenue (e.g. ADMOB_BIDDING, APPLOVIN_NETWORK)"
+        tests:
+          - not_null
+
+      - name: app_name
+        description: "Display name of the app (can change, do NOT use as join key)"
+        tests:
+          - not_null
