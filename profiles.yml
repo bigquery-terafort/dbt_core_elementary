@@ -1,1 +1,14 @@
-
+terafort:
+  target: prod
+  outputs:
+    prod:
+      type: bigquery
+      method: service-account-json
+      project: terafort
+      dataset: dbt_staging
+      threads: 4
+      keyfile_json: "{{ env_var('GCP_SERVICE_ACCOUNT_JSON') | as_native }}"
+      location: US
+      priority: interactive
+      job_execution_timeout_seconds: 600
+      job_retries: 1
