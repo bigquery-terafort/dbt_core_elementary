@@ -40,7 +40,12 @@ jobs:
         env:
           GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.BIGQUERY_SERVICE_ACCOUNT_KEY }}
 
-      - name: dbt run (build the test model)
+      - name: dbt run (build models)
         run: dbt run --select stg_applovin__daily_revenue
+        env:
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.BIGQUERY_SERVICE_ACCOUNT_KEY }}
+
+      - name: dbt test (verify data quality)
+        run: dbt test --select stg_applovin__daily_revenue
         env:
           GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.BIGQUERY_SERVICE_ACCOUNT_KEY }}
