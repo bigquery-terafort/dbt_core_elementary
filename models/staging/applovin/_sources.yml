@@ -1,1 +1,10 @@
-..
+version: 2
+
+sources:
+  - name: applovin_data
+    description: "Raw AppLovin data from extractor"
+    database: terafort
+    schema: applovin_data
+    tables:
+      - name: applovin_daily_revenue
+        description: "Daily revenue per app from AppLovin (verified 100% package_name coverage on 23,487 rows)"
